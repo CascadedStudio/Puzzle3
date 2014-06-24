@@ -46,7 +46,7 @@ public class LevelGenerator : MonoBehaviour {
 			}
 			parser.getInt ();
 		}
-		Camera.main.GetComponent<GameController> ().map = map;
+		GameController.setMap(map, width, height);
 		Debug.Log ("Map has been loaded");
 
 		foreach (GameObject Char in Player) {

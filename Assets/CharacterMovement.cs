@@ -2,9 +2,13 @@
 using System.Collections;
 
 public class CharacterMovement : MonoBehaviour {
+
+	private const float MAX_COOLDOWN = 0.1f;
 	//Starting position
 	public int StartX;
 	public int StartY;
+	//Cooldown biar karakternya gak running like crazy
+	private float cooldown;
 	//Movement of the character, one must be straight and one must be inverted
 	public enum Movement { Straight, Inverted};
 	public Movement moveDir;
@@ -26,7 +30,7 @@ public class CharacterMovement : MonoBehaviour {
 	public void initialize() {
 		//Get the map
 		Debug.Log ("Game controller is getting the map");
-		map = Camera.main.GetComponent<GameController>().map;
+		map = GameController.map;
 		now.x = StartX;
 		now.y = StartY;
 		//Put he character to the right position
@@ -45,37 +49,39 @@ public class CharacterMovement : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKey (KeyCode.UpArrow)){
-			if(map[now.x,now.y - 1] != Grid.Type.bottom && map[now.x, now.y -1] != Grid.Type.bottomRight){
-				this.transform.Translate (0, 1f * Move,0);
-				now.y--;
-				StartCoroutine (Delay ());
+
+		if (cooldown > 0) {
+						cooldown -= Time.deltaTime;
+		} else {
+			if (Input.GetKey (KeyCode.UpArrow)) {
+				Debug.Log ("(" + now.x + "," + now.y + ")");
+				if (now.y < GameController.mapHeight - 1 && map [now.x, now.y + 1] != Grid.Type.bottom && map [now.x, now.y + 1] != Grid.Type.bottomRight) {
+					this.transform.Translate (0, 1f * Move, 0);
+					now.y++;
+					cooldown = MAX_COOLDOWN;
+				}
+			} else if (Input.GetKey (KeyCode.DownArrow)) {
+				Debug.Log ("(" + now.x + "," + now.y + ")");
+				if (now.y > 0 && map [now.x, now.y] != Grid.Type.bottom && map [now.x, now.y] != Grid.Type.bottomRight) {
+					this.transform.Translate (0, -1f * Move, 0);
+					now.y--;
+					cooldown = MAX_COOLDOWN;
+				}
+			} else if (Input.GetKey (KeyCode.RightArrow)) {
+				Debug.Log ("(" + now.x + "," + now.y + ")");
+				if (now.x < GameController.mapWidth - 1 && map [now.x, now.y] != Grid.Type.right && map [now.x, now.y] != Grid.Type.bottomRight) {
+					this.transform.Translate (1f * Move, 0, 0);
+					now.x++;
+					cooldown = MAX_COOLDOWN;
+				} 
+			} else if (Input.GetKey (KeyCode.LeftArrow)) {
+				Debug.Log ("(" + now.x + "," + now.y + ")");
+				if (now.x > 0 && map [now.x - 1, now.y] != Grid.Type.right && map [now.x - 1, now.y] != Grid.Type.bottomRight) {
+					this.transform.Translate (-1f * Move, 0, 0);
+					now.x--;
+					cooldown = MAX_COOLDOWN;
+				}
 			}
 		}
-		else if(Input.GetKey (KeyCode.DownArrow)){
-			if(map[now.x,now.y] != Grid.Type.bottom && map[now.x, now.y] != Grid.Type.bottomRight){
-				this.transform.Translate (0, -1f * Move,0);
-				now.y++;
-				StartCoroutine (Delay ());
-			}
-		}
-		else if(Input.GetKey (KeyCode.RightArrow)){
-			if(map[now.x,now.y] != Grid.Type.right && map[now.x, now.y] != Grid.Type.bottomRight){
-				this.transform.Translate (1f * Move,0,0);
-				now.x++;
-				StartCoroutine (Delay ());
-			} 
-		}
-		else if(Input.GetKey (KeyCode.LeftArrow)){
-			if(map[now.x - 1,now.y] != Grid.Type.right && map[now.x - 1, now.y] != Grid.Type.bottomRight){
-				this.transform.Translate (-1f * Move,0,0);
-				now.x--;
-				StartCoroutine (Delay ());
-			}
-		}
-	}
-	//Delay each input by 0.1 second
-	IEnumerator Delay(){
-			yield return new WaitForSeconds(0.1f);
 	}
 }

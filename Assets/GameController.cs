@@ -1,16 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameController : MonoBehaviour {
+public static class GameController  {
 
-	public Grid.Type[,] map;
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+	public static Grid.Type[,] map;
+	public static int mapWidth;
+	public static int mapHeight;
+
+	public static void setMap(Grid.Type[,] m, int width, int height) {
+		map = m;
+		mapWidth = width;
+		mapHeight = height;
 	}
 }
