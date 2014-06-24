@@ -28,18 +28,15 @@ public class LevelGenerator : MonoBehaviour {
 					GameObject.Instantiate(templateClear, pos, Quaternion.identity);
 					break;
 				case 1:
-					//map[j,i] = Grid.Type.bottom;
-					map[j,i] = Grid.Type.clear;
+					map[j,i] = Grid.Type.bottom;
 					GameObject.Instantiate(templateBottom, pos, Quaternion.identity);
 					break;
 				case 2:
-					//map[j,i] = Grid.Type.right;
-					map[j,i] = Grid.Type.clear;
+					map[j,i] = Grid.Type.right;
 					GameObject.Instantiate(templateRight, pos, Quaternion.identity);
 					break;
 				case 3:
-					//map[j,i] = Grid.Type.bottomRight;
-					map[j,i] = Grid.Type.clear;
+					map[j,i] = Grid.Type.bottomRight;
 					GameObject.Instantiate(templateBottomRight, pos, Quaternion.identity);
 					break;
 				}
